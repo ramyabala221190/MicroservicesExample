@@ -1,0 +1,79 @@
+<span>Welcome</span><h4 id="username"></h4>
+<hr/>
+<button class="btn btn-success" ng-click="$ctrl.getProducts()">View Books</button>
+<button class="btn btn-success" ng-click="$ctrl.createProduct()">Create Book</button>
+
+
+<div ng-if="$ctrl.productList.length > 0 ">
+<table class="table">
+<tr>
+<th>Action</th>
+<th>BookName</th>
+<th>Author</th>
+<th>Format</th>
+<th>Publisher</th>
+<th>Pages</th>
+<th>BookCover</th>
+</tr>
+<tr ng-repeat="x in $ctrl.productList" >
+<td><button class="btn btn-primary" ng-click='$ctrl.deleteProducts(x.gtin14)'>Delete/</button>
+<button class="btn btn-primary" ng-click='$ctrl.editProduct(x)'>Edit</button></td>
+<td><input type="hidden" ng-model="$ctrl.bookId" value="{{x.gtin14}}"/><span>{{x.name}}</span></td>
+<td><span>{{x.author}}</span></td>
+<td><span>{{x.format}}</span></td>
+<td><span>{{x.publisher}}</span></td>
+<td><span>{{x.pages}}</span></td>
+<td>
+<input style="display:none" type="file" id="book_image{{$index}}" accept="image/*" onchange="StoreFile(event)" name="bookimage"/>
+<span ng-if="x.images.length==0">
+<img style="width:100px;height:100px" id="output{{$index}}" src="images/default.png" onclick='openfileBrowser(event);return false;'/>
+</span>
+<span ng-if="x.images.length > 0">
+<img style="width:100px;height:100px" id="output{{$index}}" src="images/{{x.images}}" onclick="openfileBrowser(event);return false;"/>
+</span>
+<button ng-click="$ctrl.upload(x.gtin14,$index)" class="btn btn-primary">Upload</button>
+
+
+</td>
+</tr>
+
+</table>
+
+</div>
+
+
+<div class="alert alert-success" ng-if="$ctrl.successEdit">Book has been edited successfully</div>
+<div class="alert alert-success" ng-if="$ctrl.successDel">Book has been deleted successfully</div>
+<div class="alert alert-success" ng-if="$ctrl.successcrt">Book has been created successfully</div>
+<div class="alert alert-danger" ng-if="$ctrl.failedEdit ||$ctrl.failedDel||$ctrl.failedcrt">
+We faced some problem performing this operation</div>
+
+
+<div ng-if="$ctrl.editForm">
+<form id="editfrm" name="editForm" ng-model="$ctrl.editingForm" class="form-group jumbotron" enctype="multipart/form-data">
+<span onclick="closeModal()" class="close">&times;</span>  
+<input type="hidden" ng-model="$ctrl.gtin"/>
+BookName:<input  class="form-control" type="text" ng-model="$ctrl.bookName" name="bookName" required/>
+BookAuthor:<input  class="form-control" type="text" ng-model="$ctrl.bookAuthor" name="bookAuthor" required/>
+BookFormat:<input  class="form-control" type="text" ng-model="$ctrl.bookFormat" name="bookFormat" required/>
+BookPublisher:<input  class="form-control" type="text" ng-model="$ctrl.bookPublisher" name="bookPublisher" required/>
+BookPages:<input  class="form-control" type="text" ng-model="$ctrl.bookPages" name="bookPages" required/>
+<button class="btn btn-primary" ng-disabled="editForm.$invalid" ng-click="$ctrl.editingProduct($ctrl.gtin,$ctrl.bookName,
+$ctrl.bookAuthor,$ctrl.bookFormat,$ctrl.bookPublisher,$ctrl.bookPages)">Edit</button>
+</form>
+
+</div>
+
+<div ng-if="$ctrl.createForm">
+<form id="crtfrm" name="createForm" ng-model="$ctrl.creatingForm" class="form-group jumbotron">
+<span onclick="closeModal()" class="close">&times;</span>  
+BookGTIN:<input type="text" class="form-control" ng-model="$ctrl.crtgtin" required/>
+BookName:<input  class="form-control" type="text" ng-model="$ctrl.crtbookName" required/>
+BookAuthor:<input  class="form-control" type="text" ng-model="$ctrl.crtbookAuthor" required/>
+BookFormat:<input  class="form-control" type="text" ng-model="$ctrl.crtbookFormat" required/>
+BookPublisher:<input  class="form-control" type="text" ng-model="$ctrl.crtbookPublisher" required/>
+BookPages:<input  class="form-control" type="text" ng-model="$ctrl.crtbookPages" required/>
+<button class="btn btn-primary" ng-disabled="createForm.$invalid" ng-click="$ctrl.creatingProduct($ctrl.crtgtin,$ctrl.crtbookName,
+$ctrl.crtbookAuthor,$ctrl.crtbookFormat,$ctrl.crtbookPublisher,$ctrl.crtbookPages)">Create</button>
+</form>
+</div>
